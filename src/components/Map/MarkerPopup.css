@@ -1,0 +1,79 @@
+.marker-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px; /* Augmenter la largeur */
+  height: 80vh; /* Fixer la hauteur */
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Empêcher les composants de dépasser */
+}
+
+.marker-popup form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden; /* Empêcher le contenu de dépasser */
+}
+
+.marker-popup input,
+.marker-popup textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.marker-popup .submit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.component-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px; /* Ajouter un espace entre les pastilles et le composant nom */
+  min-height: 60px; /* Hauteur minimale pour deux pastilles */
+}
+
+.component-pills button {
+  width: fit-content;
+  height: fit-content; /* Ajuster la hauteur au contenu */
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  color: #333; /* Texte sombre */
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Arrondir les bordures */
+  cursor: pointer;
+  font-size: 0.9em; /* Réduire la taille des pastilles */
+  white-space: nowrap; /* Ajuster la largeur au contenu */
+}
+
+.form-components-container {
+  flex-grow: 1;
+  overflow-y: auto; /* Activer le défilement vertical */
+  overflow-x: hidden; /* Empêcher le défilement horizontal */
+  padding-right: 10px; /* Ajouter un espace pour le défilement */
+}
+
+.form-component {
+  margin-bottom: 10px; /* Ajouter un espacement entre les composants */
+}
+
+.form-component + .form-component {
+  border-top: 1px solid #ccc; /* Ajouter une ligne de séparation entre les composants */
+  padding-top: 10px;
+}
