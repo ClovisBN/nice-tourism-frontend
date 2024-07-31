@@ -1,0 +1,12 @@
+/* src/components/FormComponents/ImageUploadComponent.css */
+.image-upload-component .dropzone {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.image-upload-component .dropzone p {
+  margin: 0;
+  color: #333;
+}

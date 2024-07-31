@@ -20,11 +20,10 @@ const PersistentMap = () => {
   } = useAppContext();
   const [styleLoaded, setStyleLoaded] = useState(false);
   const [newMarker, setNewMarker] = useState(null);
-  const [markerName, setMarkerName] = useState("");
   const [markers, setMarkers] = useMarkers(styleLoaded);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [clickOnMarker, setClickOnMarker] = useState(false); // Nouvel indicateur
+  const [clickOnMarker, setClickOnMarker] = useState(false);
 
   const HERBIGNAC_BOUNDS = [
     [-2.4, 47.4],
@@ -60,15 +59,15 @@ const PersistentMap = () => {
       setNewMarker({ longitude, latitude });
       setIsAddingMarker(false);
     } else if (sidebarOpen && !clickOnMarker) {
-      setSidebarOpen(false); // Fermer la sidebar si elle est ouverte et qu'on clique ailleurs sur la carte
+      setSidebarOpen(false);
     }
-    setClickOnMarker(false); // Réinitialiser l'indicateur après chaque clic sur la carte
+    setClickOnMarker(false);
   };
 
   const handleMarkerClick = (marker) => {
     setSelectedMarker(marker);
     setSidebarOpen(true);
-    setClickOnMarker(true); // Indiquer qu'on a cliqué sur un marqueur
+    setClickOnMarker(true);
     mapRef.current.flyTo({
       center: [marker.coordinate.longitude, marker.coordinate.latitude],
       zoom: 15,
@@ -80,25 +79,41 @@ const PersistentMap = () => {
 
   const handleMarkerSubmit = async (details) => {
     try {
-      const payload = {
-        name_point: details.name,
-        coordinate: JSON.stringify({
+      const formData = new FormData();
+      formData.append("name_point", details.name);
+      formData.append(
+        "coordinate",
+        JSON.stringify({
           longitude: details.longitude,
           latitude: details.latitude,
-        }),
-        details: JSON.stringify({
+        })
+      );
+      formData.append(
+        "details",
+        JSON.stringify({
           openingHours: details.openingHours || "",
           description: details.description || "",
           website: details.website || "",
           phoneNumber: details.phoneNumber || "",
           email: details.email || "",
           accessibility: details.accessibility || "",
-        }),
-      };
+        })
+      );
+      if (details.image) {
+        formData.append("image", details.image);
+      }
 
-      console.log("Payload being sent:", payload); // Ajout du console.log
+      console.log("Payload being sent:", formData);
 
-      const response = await axiosInstance.post("/points-of-interest", payload);
+      const response = await axiosInstance.post(
+        "/points-of-interest",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       setMarkers((prevMarkers) => [
         ...prevMarkers,
@@ -125,7 +140,7 @@ const PersistentMap = () => {
         position: isMapVisible ? "relative" : "absolute",
         visibility: isMapVisible ? "visible" : "hidden",
         cursor: isAddingMarker ? "crosshair" : "auto",
-        overflow: "hidden" /* Empêche le scroll */,
+        overflow: "hidden",
       }}
     >
       <Map
@@ -182,8 +197,6 @@ const PersistentMap = () => {
         <MarkerPopup
           longitude={newMarker.longitude}
           latitude={newMarker.latitude}
-          markerName={markerName}
-          setMarkerName={setMarkerName}
           handleMarkerSubmit={handleMarkerSubmit}
         />
       )}

@@ -3,7 +3,7 @@ import "./Sidebar.css";
 
 const Sidebar = ({ isOpen, toggleSidebar, markerInfo }) => {
   useEffect(() => {
-    console.log("Selected marker info:", markerInfo); // Ajout du console.log
+    console.log("Selected marker info:", markerInfo);
   }, [markerInfo]);
 
   return (
@@ -13,6 +13,15 @@ const Sidebar = ({ isOpen, toggleSidebar, markerInfo }) => {
       </button>
       {markerInfo && (
         <div className="marker-info">
+          {markerInfo.image_path && (
+            <div className="image-container">
+              <img
+                src={`http://localhost:8000${markerInfo.image_path}`}
+                alt={markerInfo.name_point}
+                className="marker-image"
+              />
+            </div>
+          )}
           <h2>{markerInfo.name_point}</h2>
           <p>Longitude: {markerInfo.coordinate.longitude}</p>
           <p>Latitude: {markerInfo.coordinate.latitude}</p>

@@ -41,7 +41,6 @@
 }
 
 .marker-info {
-  padding: 20px;
   color: #ffffff;
 }
 
@@ -51,4 +50,9 @@
 
 .marker-info h3 {
   margin-top: 20px;
+}
+
+.image-container {
+  overflow-x: hidden;
+  height: 250px;
 }

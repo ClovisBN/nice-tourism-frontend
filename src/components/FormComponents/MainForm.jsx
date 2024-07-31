@@ -1,4 +1,3 @@
-// src/components/FormComponents/MainForm.jsx
 import React, { useState } from "react";
 import NameComponent from "./NameComponent";
 import OpeningHoursComponent from "./OpeningHoursComponent";
@@ -7,6 +6,7 @@ import WebsiteComponent from "./WebsiteComponent";
 import PhoneNumberComponent from "./PhoneNumberComponent";
 import EmailComponent from "./EmailComponent";
 import AccessibilityComponent from "./AccessibilityComponent";
+import ImageUploadComponent from "./ImageUploadComponent";
 
 const MainForm = ({ handleSubmit, longitude, latitude }) => {
   const [name, setName] = useState("");
@@ -16,6 +16,7 @@ const MainForm = ({ handleSubmit, longitude, latitude }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [accessibility, setAccessibility] = useState("");
+  const [image, setImage] = useState(null);
 
   const [components, setComponents] = useState([
     {
@@ -68,6 +69,11 @@ const MainForm = ({ handleSubmit, longitude, latitude }) => {
       ),
       active: false,
     },
+    {
+      id: "image",
+      component: <ImageUploadComponent image={image} setImage={setImage} />,
+      active: false,
+    },
   ]);
 
   const activateComponent = (id) => {
@@ -98,8 +104,9 @@ const MainForm = ({ handleSubmit, longitude, latitude }) => {
       phoneNumber: phoneNumber || null,
       email: email || null,
       accessibility: accessibility || null,
+      image,
     };
-    console.log("Details being sent:", details); // Ajout du console.log
+    console.log("Details being sent:", details);
     handleSubmit(details);
   };
 
@@ -143,6 +150,8 @@ const MainForm = ({ handleSubmit, longitude, latitude }) => {
                     setEmail,
                     accessibility,
                     setAccessibility,
+                    image,
+                    setImage,
                   })}
                   {comp.id !== "name" && (
                     <button
