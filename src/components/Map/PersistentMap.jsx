@@ -7,6 +7,7 @@ import MarkerPopup from "./MarkerPopup";
 import Sidebar from "./Sidebar";
 import useMarkers from "../../hooks/useMarkers";
 import "./PersistentMap.css";
+import Toolbar from "../Toolbar/Toolbar";
 
 const PersistentMap = () => {
   const mapRef = useRef(null);
@@ -143,6 +144,8 @@ const PersistentMap = () => {
         overflow: "hidden",
       }}
     >
+      <Toolbar />
+
       <Map
         ref={mapRef}
         mapboxAccessToken="pk.eyJ1IjoibmF6YXJoaWhpaGloaWhpaGkiLCJhIjoiY2x6MmVmYWhhMzc0ZzJqcXZ0cWE0NjBrdiJ9.Lr_HpvdNlqvstGpiM_lH0w"

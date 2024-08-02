@@ -1,0 +1,63 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.color-picker,
+.highlight-picker {
+  display: flex;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: white;
+  z-index: 1;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.color-column {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.color-cell {
+  width: 20px;
+  height: 20px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.custom-color-picker-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 1px solid #ccc;
+  background: white;
+  padding: 10px;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-color-picker {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.color-square {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.saturation-lightness {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

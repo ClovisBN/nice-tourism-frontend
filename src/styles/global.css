@@ -6,3 +6,44 @@ body {
   font-family: "Arial", sans-serif;
   box-sizing: border-box;
 }
+
+/* src/styles/global.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+div[contenteditable="true"] {
+  min-height: 400px;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+/* src/styles/global.css */
+.toolbarArticle {
+  display: flex;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.button {
+  cursor: pointer;
+  margin-right: 15px;
+  color: gray;
+}
+
+.button.active {
+  color: black;
+}
+
+.material-icons {
+  font-size: 18px;
+}

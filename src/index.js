@@ -1,13 +1,14 @@
+// src/index.js
 import React from "react";
-import ReactDOM from "react-dom/client";
-import WrappedApp from "./App";
-import "./index.css";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import "./styles/global.css";
 
 const container = document.getElementById("root");
-const root = ReactDOM.createRoot(container);
+const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <WrappedApp />
+    <App />
   </React.StrictMode>
 );
