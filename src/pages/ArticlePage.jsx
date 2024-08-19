@@ -1,19 +1,36 @@
-// src/pages/ArticlePage.jsx
-import React, { useEffect } from "react";
-import { useAppContext } from "../context/AppContext";
+// src/pages/ArticleListPage.jsx
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axiosInstance from "../axiosConfig";
 
 const ArticlePage = () => {
-  const { setIsMapVisible } = useAppContext();
+  const [articles, setArticles] = useState([]);
 
   useEffect(() => {
-    setIsMapVisible(false);
-    return () => setIsMapVisible(true); // Remettre la carte visible lors de la navigation
-  }, [setIsMapVisible]);
+    const fetchArticles = async () => {
+      try {
+        const response = await axiosInstance.get("/articles");
+        console.log(response.data); // Ajoutez ceci pour voir ce que l'API renvoie
+        setArticles(response.data);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      }
+    };
+
+    fetchArticles();
+  }, []);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>Article Title</h1>
-      <p>This is the article content.</p>
+    <div className="article-list">
+      {articles.map((article) => (
+        <div key={article.id} className="article">
+          <h2>
+            <Link to={`/articles/${article.id}`}>{article.name}</Link>
+          </h2>
+          <p>{article.description}</p>
+          {article.image && <img src={article.image} alt={article.name} />}
+        </div>
+      ))}
     </div>
   );
 };

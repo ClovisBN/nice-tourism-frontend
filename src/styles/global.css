@@ -6,3 +6,53 @@ body {
   font-family: "Arial", sans-serif;
   box-sizing: border-box;
 }
+
+/* src/styles/global.css */
+
+.create-article {
+  margin-top: 100px;
+}
+
+.article-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.article {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 300px;
+}
+
+.article img {
+  max-width: 100%;
+  height: auto;
+}
+
+.create-article form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.create-article label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.dropzone img {
+  margin-top: 10px;
+}

@@ -1,34 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import Map, { Source, Layer, Marker } from "react-map-gl";
-import MapControls from "./MapControls";
+import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import { useAppContext } from "../../context/AppContext";
 import axiosInstance from "../../axiosConfig";
 import MarkerPopup from "./MarkerPopup";
 import Sidebar from "./Sidebar";
 import useMarkers from "../../hooks/useMarkers";
 import "./PersistentMap.css";
+import Toolbar from "../Toolbar/Toolbar";
+
+const HERBIGNAC_BOUNDS = [
+  [47.4, -2.4], // Sud-Ouest d'Herbignac
+  [47.5, -2.2], // Nord-Est d'Herbignac
+];
 
 const PersistentMap = () => {
-  const mapRef = useRef(null);
+  const { isMapVisible, isAddingMarker, setIsAddingMarker } = useAppContext();
   const [geoJsonData, setGeoJsonData] = useState(null);
-  const {
-    mapState,
-    setMapState,
-    isMapVisible,
-    isAddingMarker,
-    setIsAddingMarker,
-  } = useAppContext();
-  const [styleLoaded, setStyleLoaded] = useState(false);
   const [newMarker, setNewMarker] = useState(null);
-  const [markers, setMarkers] = useMarkers(styleLoaded);
+  const [markers, setMarkers] = useMarkers(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [clickOnMarker, setClickOnMarker] = useState(false);
-
-  const HERBIGNAC_BOUNDS = [
-    [-2.4, 47.4],
-    [-2.2, 47.5],
-  ];
 
   useEffect(() => {
     fetchGeoJsonData();
@@ -44,37 +36,22 @@ const PersistentMap = () => {
     }
   };
 
-  const handleMapLoad = () => {
-    setStyleLoaded(true);
-  };
-
-  const handleMove = (event) => {
-    const { longitude, latitude, zoom } = event.viewState;
-    setMapState({ longitude, latitude, zoom });
-  };
-
   const handleMapClick = (event) => {
+    console.log("Map was clicked!"); // Test pour voir si la fonction est bien appelée
+    const { lat, lng } = event.latlng;
+    console.log(`Clicked at longitude: ${lng}, latitude: ${lat}`);
+
     if (isAddingMarker) {
-      const [longitude, latitude] = [event.lngLat.lng, event.lngLat.lat];
-      setNewMarker({ longitude, latitude });
+      setNewMarker({ longitude: lng, latitude: lat });
       setIsAddingMarker(false);
-    } else if (sidebarOpen && !clickOnMarker) {
+    } else if (sidebarOpen && !selectedMarker) {
       setSidebarOpen(false);
     }
-    setClickOnMarker(false);
   };
 
   const handleMarkerClick = (marker) => {
     setSelectedMarker(marker);
     setSidebarOpen(true);
-    setClickOnMarker(true);
-    mapRef.current.flyTo({
-      center: [marker.coordinate.longitude, marker.coordinate.latitude],
-      zoom: 15,
-      bearing: 30,
-      pitch: 45,
-      essential: true,
-    });
   };
 
   const handleMarkerSubmit = async (details) => {
@@ -133,66 +110,48 @@ const PersistentMap = () => {
 
   return (
     <div
-      id="dssd"
+      id="map-container"
       style={{
         height: "100vh",
         width: "100%",
+        zIndex: "1",
         position: isMapVisible ? "relative" : "absolute",
         visibility: isMapVisible ? "visible" : "hidden",
         cursor: isAddingMarker ? "crosshair" : "auto",
         overflow: "hidden",
       }}
+      onClick={() => console.log("Div was clicked!")}
     >
-      <Map
-        ref={mapRef}
-        mapboxAccessToken="pk.eyJ1IjoibmF6YXJoaWhpaGloaWhpaGkiLCJhIjoiY2x6MmVmYWhhMzc0ZzJqcXZ0cWE0NjBrdiJ9.Lr_HpvdNlqvstGpiM_lH0w"
-        initialViewState={mapState}
-        onMove={handleMove}
-        onLoad={handleMapLoad}
-        onClick={handleMapClick}
-        style={{ width: "100%", height: "100%" }}
-        mapStyle="mapbox://styles/nazarhihihihihihi/clz342blm00np01ph9luqcrld"
+      <MapContainer
+        center={[47.45, -2.3]}
+        zoom={13}
+        scrollWheelZoom={true}
+        style={{ height: "100%", width: "100%", zIndex: "1000" }}
+        minZoom={12}
         maxBounds={HERBIGNAC_BOUNDS}
-        minZoom={8}
-        maxZoom={18}
+        maxBoundsViscosity={1.0}
+        onClick={handleMapClick}
+        onMouseMove={() => console.log("Mouse is moving over the map")}
       >
-        <MapControls />
-        {styleLoaded && geoJsonData && (
-          <Source id="herbignac" type="geojson" data={geoJsonData}>
-            <Layer
-              id="herbignac-fill"
-              type="fill"
-              paint={{
-                "fill-color": "#888888",
-                "fill-opacity": 0,
-              }}
-            />
-            <Layer
-              id="herbignac-outline"
-              type="line"
-              paint={{
-                "line-color": "#000000",
-                "line-width": 2,
-              }}
-            />
-          </Source>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {geoJsonData && (
+          <GeoJSON data={geoJsonData} style={{ color: "#000000", weight: 2 }} />
         )}
-        {styleLoaded &&
-          markers.map((marker) => (
-            <Marker
-              key={marker.id}
-              longitude={marker.coordinate.longitude}
-              latitude={marker.coordinate.latitude}
-              onClick={() => handleMarkerClick(marker)}
-            >
-              <img
-                src="/sprite_images/mapbox-circle.svg"
-                alt="Marker"
-                className="marker-icon"
-              />
-            </Marker>
-          ))}
-      </Map>
+        {markers.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={[marker.coordinate.latitude, marker.coordinate.longitude]}
+            eventHandlers={{
+              click: () => handleMarkerClick(marker),
+            }}
+          >
+            <Popup>{marker.name_point}</Popup>
+          </Marker>
+        ))}
+      </MapContainer>
       {newMarker && (
         <MarkerPopup
           longitude={newMarker.longitude}
@@ -207,6 +166,7 @@ const PersistentMap = () => {
           markerInfo={selectedMarker}
         />
       )}
+      <Toolbar />
     </div>
   );
 };
